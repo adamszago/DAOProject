@@ -15,11 +15,11 @@ import src.model.dao.SellerDAO;
 public class SellerDaoJDBC implements SellerDAO {
 
 	private Connection conn;
-	
+
 	public SellerDaoJDBC(Connection conn) {
-		this.conn  = conn;
+		this.conn = conn;
 	}
-	
+
 	@Override
 	public void insert(Seller obj) {
 		// TODO Auto-generated method stub
@@ -43,24 +43,14 @@ public class SellerDaoJDBC implements SellerDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			ps = conn.prepareStatement("SELECT SELLER.*, DEPARTMENT.NAME AS DepName "
-				+ "FROM SELLER INNER JOIN DEPARTMENT "
-				+ "ON SELLER.DEPARTMENTID = DEPARTMENT.ID "
-				+ "WHERE SELLER.ID = ?" 
-			);
+			ps = conn.prepareStatement(
+					"SELECT SELLER.*, DEPARTMENT.NAME AS DepName " + "FROM SELLER INNER JOIN DEPARTMENT "
+							+ "ON SELLER.DEPARTMENTID = DEPARTMENT.ID " + "WHERE SELLER.ID = ?");
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
 			if (rs.next()) {
-				Department dept = new Department();
-				dept.setId(rs.getInt("DepartmentId"));
-				dept.setName(rs.getString("DepName"));
-				Seller se = new Seller();
-				se.setId(rs.getInt("Id"));
-				se.setName(rs.getString("Name"));
-				se.setEmail(rs.getString("Email"));
-				se.setBaseSalary(rs.getDouble("BaseSalary"));
-				se.setBirthDate(rs.getDate("BirthDate"));
-				se.setDepartment(dept);
+				Department dept = instantiateDepartment(rs);
+				Seller se = instantiateSeller(rs, dept);
 				return se;
 			}
 			return null;
@@ -69,8 +59,26 @@ public class SellerDaoJDBC implements SellerDAO {
 		} finally {
 			DB.closeStatement(ps);
 			DB.closeResultSet(rs);
-			
+
 		}
+	}
+
+	private Seller instantiateSeller(ResultSet rs, Department dept) throws SQLException {
+		Seller se = new Seller();
+		se.setId(rs.getInt("Id"));
+		se.setName(rs.getString("Name"));
+		se.setEmail(rs.getString("Email"));
+		se.setBaseSalary(rs.getDouble("BaseSalary"));
+		se.setBirthDate(rs.getDate("BirthDate"));
+		se.setDepartment(dept);
+		return se;
+	}
+
+	private Department instantiateDepartment(ResultSet rs) throws SQLException {
+		Department dept = new Department();
+		dept.setId(rs.getInt("DepartmentId"));
+		dept.setName(rs.getString("DepName"));
+		return dept;
 	}
 
 	@Override
