@@ -43,7 +43,7 @@ public class SellerDaoJDBC implements SellerDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			ps = conn.prepareStatement("SELECT SELLER.*, DEPARTMENT.NAME AS DepName, "
+			ps = conn.prepareStatement("SELECT SELLER.*, DEPARTMENT.NAME AS DepName "
 				+ "FROM SELLER INNER JOIN DEPARTMENT "
 				+ "ON SELLER.DEPARTMENTID = DEPARTMENT.ID "
 				+ "WHERE SELLER.ID = ?" 
