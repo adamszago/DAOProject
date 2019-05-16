@@ -2,6 +2,7 @@ package src.model.dao;
 
 import java.util.List;
 
+import src.entities.Department;
 import src.entities.Seller;
 
 public interface SellerDAO {
@@ -15,4 +16,6 @@ public interface SellerDAO {
 	Seller findById(Integer id);
 
 	List<Seller> findAll();
+	
+	List<Seller> findByDepartment(Department department);
 }
