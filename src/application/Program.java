@@ -29,6 +29,8 @@ public class Program {
 		System.out.println("==================== TEST FIVE UPDATE ====================");
 		sel.setName("Adams");
 		dao.update(sel);
+		System.out.println("==================== TEST FIVE DELETE ====================");
+		dao.deletById(7);
 	}
 
 }
