@@ -1,5 +1,6 @@
 package src.application;
 
+import java.util.Date;
 import java.util.List;
 
 import src.entities.Department;
@@ -23,6 +24,10 @@ public class Program {
 		for (Seller seller2 : sellers) {
 			System.out.println(seller2);
 		}
+		
+		Seller sel = new Seller(null, "Greg", "grege@gmail.com", new Date(), 4000.0, new Department(2,null));
+		dao.insert(sel);
+		System.out.println("Seller inserted: " + sel.getId());
 	}
 
 }
