@@ -16,7 +16,9 @@ public class Program {
 
 		System.out.println(seller);
 
-		List<Seller> sellers = dao.findByDepartment(new Department(2, null));
+		//List<Seller> sellers = dao.findByDepartment(new Department(2, null));
+		
+		List<Seller> sellers = dao.findAll();
 
 		for (Seller seller2 : sellers) {
 			System.out.println(seller2);
