@@ -29,15 +29,14 @@ public class SellerDaoJDBC implements SellerDAO {
 	public void insert(Seller obj) {
 		PreparedStatement ps = null;
 		try {
-			ps = conn.prepareStatement("INSERT INTO SELLER "
-					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+			ps = conn.prepareStatement("INSERT INTO SELLER " + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
 					+ "VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, obj.getName());
 			ps.setString(2, obj.getEmail());
 			ps.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
 			ps.setDouble(4, obj.getBaseSalary());
 			ps.setInt(5, obj.getDepartment().getId());
-			
+
 			int rowsAffected = ps.executeUpdate();
 			if (rowsAffected > 0) {
 				ResultSet rs = ps.getGeneratedKeys();
@@ -53,12 +52,29 @@ public class SellerDaoJDBC implements SellerDAO {
 		} finally {
 			DB.closeStatement(ps);
 		}
-
 	}
 
 	@Override
 	public void update(Seller obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
+		try {
+			ps = conn.prepareStatement("UPDATE SELLER "
+					+ "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " 
+					+ "WHERE ID = ?");
+			ps.setString(1, obj.getName());
+			ps.setString(2, obj.getEmail());
+			ps.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+			ps.setDouble(4, obj.getBaseSalary());
+			ps.setInt(5, obj.getDepartment().getId());
+			ps.setInt(6, obj.getId());
+
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(ps);
+		}
 
 	}
 
@@ -118,10 +134,8 @@ public class SellerDaoJDBC implements SellerDAO {
 
 		try {
 			ps = conn.prepareStatement(
-					"SELECT SELLER.*, DEPARTMENT.NAME AS DepName " 
-							+ "FROM SELLER INNER JOIN DEPARTMENT "
-							+ "ON SELLER.DEPARTMENTID = DEPARTMENT.ID " 
-							+ "ORDER BY NAME");
+					"SELECT SELLER.*, DEPARTMENT.NAME AS DepName " + "FROM SELLER INNER JOIN DEPARTMENT "
+							+ "ON SELLER.DEPARTMENTID = DEPARTMENT.ID " + "ORDER BY NAME");
 			rs = ps.executeQuery();
 			List<Seller> sellers = new ArrayList<>();
 			Map<Integer, Department> mapDepartment = new HashMap<>();
